@@ -3,6 +3,8 @@ use thiserror::Error;
 pub use super::collections::CollectionId;
 pub use super::images::ImageId;
 pub use super::notifications::NotificationId;
+pub use super::oauth_clients::OAuthClientAuthorizationId;
+pub use super::oauth_clients::{OAuthClientId, OAuthRedirectUriId};
 pub use super::organizations::OrganizationId;
 pub use super::pats::PatId;
 pub use super::projects::{ProjectId, VersionId};
@@ -103,6 +105,16 @@ macro_rules! impl_base62_display {
 }
 impl_base62_display!(Base62Id);
 
+macro_rules! impl_base62_parse {
+    ($struct:ty) => {
+        impl $struct {
+            pub fn parse(value: &str) -> Result<Self, DecodingError> {
+                Ok(Self(base62_impl::parse_base62(value)?))
+            }
+        }
+    };
+}
+
 macro_rules! base62_id_impl {
     ($struct:ty, $cons:expr) => {
         from_base62id!($struct, $cons;);
@@ -122,6 +134,10 @@ base62_id_impl!(ThreadMessageId, ThreadMessageId);
 base62_id_impl!(SessionId, SessionId);
 base62_id_impl!(PatId, PatId);
 base62_id_impl!(ImageId, ImageId);
+base62_id_impl!(OAuthClientId, OAuthClientId);
+impl_base62_parse!(OAuthClientId);
+base62_id_impl!(OAuthRedirectUriId, OAuthRedirectUriId);
+base62_id_impl!(OAuthClientAuthorizationId, OAuthClientAuthorizationId);
 
 pub mod base62_impl {
     use serde::de::{self, Deserializer, Visitor};
