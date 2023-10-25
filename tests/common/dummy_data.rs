@@ -19,7 +19,7 @@ use super::{
     request_data::get_public_project_creation_data,
 };
 
-pub const DUMMY_DATA_UPDATE: i64 = 2;
+pub const DUMMY_DATA_UPDATE: i64 = 3;
 
 #[allow(dead_code)]
 pub const DUMMY_CATEGORIES: &[&str] = &[
@@ -212,7 +212,7 @@ pub async fn add_project_alpha(test_env: &TestEnvironment) -> (Project, Version)
     let (project, versions) = test_env
         .v2
         .add_public_project(
-            get_public_project_creation_data("alpha", Some(DummyJarFile::DummyProjectAlpha)),
+            get_public_project_creation_data("alpha", Some(DummyJarFile::DummyProjectAlpha), None),
             USER_USER_PAT,
         )
         .await;
